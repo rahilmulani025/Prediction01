@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Levels for Predictions</title>
+    <title>6 Levels for Predictions</title>
     <style>
         body {
             background-color: #f0f8ff; /* Light blue background color */
@@ -38,11 +38,17 @@
             margin-top: 30px;
             font-size: 18px;
         }
+        
+        .sum {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>7 LEVELS FOR PREDICTIONS</h1>
+    <h1>6 LEVELS FOR PREDICTIONS</h1>
     <p>Created by: @Mrunknown</p>
 
     <input type="number" id="level1" placeholder="Enter Level 1">
@@ -50,23 +56,34 @@
     <button onclick="generateLevels()">Generate Levels</button>
 
     <div class="output" id="output"></div>
+    <div class="sum" id="sum"></div> <!-- To display the sum -->
 
     <script>
         function generateLevels() {
             let number = parseInt(document.getElementById('level1').value);
             let output = document.getElementById('output');
+            let sumOutput = document.getElementById('sum');
             output.innerHTML = '';  // Clear previous results
+            sumOutput.innerHTML = '';  // Clear previous sum
 
             if (isNaN(number)) {
                 output.innerHTML = "Please enter a valid number.";
                 return;
             }
 
-            // Loop to calculate and display the next 6 levels
-            for (let i = 0; i < 6; i++) {
+            let sum = number;  // Initialize sum with the input number
+
+            output.innerHTML += `<p>Level 1: ${number}</p>`;  // Display initial level
+            
+            // Loop to calculate and display the next 5 levels
+            for (let i = 0; i < 5; i++) {
                 number *= 3;
                 output.innerHTML += `<p>Level ${i + 2}: ${number}</p>`;
+                sum += number;  // Add the result to the sum
             }
+
+            // Display the final sum
+            sumOutput.innerHTML = `Sum of all levels: ${sum}`;
         }
     </script>
 
