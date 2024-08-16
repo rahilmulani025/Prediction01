@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6 Levels for Predictions</title>
+    <title>Levels for Predictions</title>
     <style>
         body {
-            background-color: #f0f8ff; /* Light blue background color */
-            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            font-family: Arial,sans-serif;
             text-align: center;
             padding: 20px;
         }
@@ -17,6 +17,14 @@
         }
 
         input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 200px;
+        }
+
+        select {
             padding: 10px;
             font-size: 16px;
             margin-top: 20px;
@@ -44,48 +52,67 @@
             font-weight: bold;
             font-size: 20px;
         }
+        
+        footer { background-color: #333;
+               color:white; 
+               padding:10px;
+               text-align:center; 
+               margin-top: auto; }
+        
+         footer a{color:#1e90ff;
+                 text-decoration:none;
+                 font-weight:bold; }
+                 
+         footer a:hover
+         { text-decoration:underline; }
     </style>
 </head>
 <body>
 
-    <h1>6 LEVELS FOR PREDICTIONS</h1>
+    <h1>Levels for Predictions</h1>
     <p>Created by: @Mrunknown</p>
 
+    <select id="levelSelection">
+        <option value="7">7 Levels</option>
+        <option value="6">6 Levels</option>
+        <option value="5">5 Levels</option>
+    </select>
+    <br>
     <input type="number" id="level1" placeholder="Enter Level 1">
     <br>
     <button onclick="generateLevels()">Generate Levels</button>
 
     <div class="output" id="output"></div>
-    <div class="sum" id="sum"></div> <!-- To display the sum -->
+    <div class="sum" id="sum"></div>
 
     <script>
         function generateLevels() {
+            let levelCount = parseInt(document.getElementById('levelSelection').value); 
             let number = parseInt(document.getElementById('level1').value);
             let output = document.getElementById('output');
             let sumOutput = document.getElementById('sum');
-            output.innerHTML = '';  // Clear previous results
-            sumOutput.innerHTML = '';  // Clear previous sum
+            output.innerHTML = ''; 
+            sumOutput.innerHTML = '';  
 
             if (isNaN(number)) {
                 output.innerHTML = "Please enter a valid number.";
                 return;
             }
 
-            let sum = number;  // Initialize sum with the input number
+            let sum = number;
 
-            output.innerHTML += `<p>Level 1: ${number}</p>`;  // Display initial level
+            output.innerHTML += `<p>Level 1: ${number}</p>`;
             
-            // Loop to calculate and display the next 5 levels
-            for (let i = 0; i < 5; i++) {
+            for (let i = 1; i < levelCount; i++) {
                 number *= 3;
-                output.innerHTML += `<p>Level ${i + 2}: ${number}</p>`;
-                sum += number;  // Add the result to the sum
+                output.innerHTML += `<p>Level ${i + 1}: ${number}</p>`;
+                sum += number;
             }
-
-            // Display the final sum
             sumOutput.innerHTML = `Sum of all levels: ${sum}`;
         }
     </script>
+    
+    <footer> <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p> </footer>
 
 </body>
 </html>
