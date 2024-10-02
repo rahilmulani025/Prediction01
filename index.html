@@ -73,12 +73,14 @@
     <p>Created by: @Mrunknown</p>
 
     <select id="levelSelection">
+        <option value="8">8 Levels</option>
         <option value="7">7 Levels</option>
         <option value="6">6 Levels</option>
         <option value="5">5 Levels</option>
+        <option value="4">4 Levels</option>
     </select>
     <br>
-    <input type="number" id="level1" placeholder="Enter Level 1">
+    <input type="number" step="any" id="level1" placeholder="Enter Level 1">
     <br>
     <button onclick="generateLevels()">Generate Levels</button>
 
@@ -88,7 +90,7 @@
     <script>
         function generateLevels() {
             let levelCount = parseInt(document.getElementById('levelSelection').value); 
-            let number = parseInt(document.getElementById('level1').value);
+            let number = parseFloat(document.getElementById('level1').value); // Changed to parseFloat
             let output = document.getElementById('output');
             let sumOutput = document.getElementById('sum');
             output.innerHTML = ''; 
@@ -105,10 +107,10 @@
             
             for (let i = 1; i < levelCount; i++) {
                 number *= 3;
-                output.innerHTML += `<p>Level ${i + 1}: ${number}</p>`;
+                output.innerHTML += `<p>Level ${i + 1}: ${number.toFixed(2)}</p>`; // Limiting float to 2 decimal places
                 sum += number;
             }
-            sumOutput.innerHTML = `Sum of all levels: ${sum}`;
+            sumOutput.innerHTML = `Sum of all levels: ${sum.toFixed(2)}`; // Limiting sum to 2 decimal places
         }
     </script>
     
