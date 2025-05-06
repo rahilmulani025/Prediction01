@@ -1,199 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Levels for Predictions</title>
   <style>
-    :root {
-      --bg-color: #f9f9ff;
-      --text-color: #000;
-      --button-bg: #333;
-      --button-text: #fff;
-      --link-color: #1e90ff;
-    }
-
-    body.dark-mode {
-      --bg-color: #1e1e1e;
-      --text-color: #f0f0f0;
-      --button-bg: #444;
-      --button-text: #fff;
-      --link-color: #87cefa;
-    }
-
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: #f5f8ff;
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
-      transition: background-color 0.4s, color 0.4s;
+      transition: background-color 0.3s, color 0.3s;
     }
-
-    select, input[type="number"], button {
+    body.dark {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .dark-mode-toggle {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    h1 {
+      margin-top: 40px;
+    }
+    input,
+    select {
       padding: 10px;
       font-size: 16px;
       margin: 10px;
       width: 220px;
-      max-width: 90%;
     }
-
     button {
-      background-color: var(--button-bg);
-      color: var(--button-text);
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
       border: none;
       border-radius: 5px;
-      cursor: pointer;
+      background-color: #333;
+      color: white;
     }
-
     .output {
-      margin-top: 30px;
-      font-size: 18px;
-    }
-
-    .sum {
       margin-top: 20px;
-      font-weight: bold;
-      font-size: 20px;
-    }
-
-    .theme-toggle {
-      margin: 0 auto 10px auto;
-      display: inline-block;
-      background: transparent;
-      font-size: 22px;
-      border: none;
-      cursor: pointer;
-    }
-
-    footer {
-      color: var(--text-color);
-      padding: 10px;
-      text-align: center;
-    }
-
-    footer a {
-      color: var(--link-color);
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
-
-  <h1>Levels for Predictions</h1>
-  <p>Created by: @Mrunknown</p>
-
-  <select id="multiplierSelection">
-    <option value="3">3x</option>
-    <option value="2">2x</option>
-  </select>
-  <br>
-
-  <select id="levelSelection">
-    <option value="8">8 Levels</option>
-    <option value="7">7 Levels</option>
-    <option value="6">6 Levels</option>
-    <option value="5">5 Levels</option>
-    <option value="4">4 Levels</option>
+  <button class="dark-mode-toggle" onclick="toggleDarkMode()">&#9728;</button>  <h1>Levels for Predictions</h1>  <select id="levelSelection">
     <option value="3">3 Levels</option>
-  </select>
-  <br>
+    <option value="4">4 Levels</option>
+    <option value="5">5 Levels</option>
+    <option value="6">6 Levels</option>
+    <option value="7">7 Levels</option>
+    <option value="8">8 Levels</option>
+  </select>  <select id="multiplier">
+    <option value="2">2x</option>
+    <option value="3">3x</option>
+  </select>  <input type="number" step="any" id="totalSum" placeholder="Enter your total balance" />
+  <br />
+  <button onclick="generateLevels()">Generate Levels</button>
+  <button onclick="downloadImage()">Download PNG</button>
+  <button onclick="downloadPDF()">Download PDF</button>  <div class="output" id="output"></div><canvas id="canvas" style="display:none"></canvas>
 
-  <input type="number" step="any" id="sumInput" placeholder="Enter your total balance">
-  <br>
-  <button onclick="calculateFromSum()">Calculate Levels</button>
-  <button onclick="clearFields()">Clear</button>
-  <button onclick="downloadLevels()">Download Levels</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  <script>
+    let darkMode = false;
 
-  <div class="output" id="output"></div>
-  <div class="sum" id="sum"></div>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      darkMode = !darkMode;
+      document.querySelector(".dark-mode-toggle").innerHTML = darkMode ? "&#9790;" : "&#9728;";
+    }
 
-  <footer>
-    <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p>
-  </footer>
-
-  <script>
-    let lastLevels = [];
-
-    function calculateFromSum() {
-      const multiplier = parseFloat(document.getElementById('multiplierSelection').value);
-      const levelCount = parseInt(document.getElementById('levelSelection').value);
-      const totalSum = parseFloat(document.getElementById('sumInput').value);
-      const output = document.getElementById('output');
-      const sumDisplay = document.getElementById('sum');
-
-      output.innerHTML = '';
-      sumDisplay.innerHTML = '';
-      lastLevels = [];
+    function generateLevels() {
+      const levelCount = parseInt(document.getElementById("levelSelection").value);
+      const multiplier = parseFloat(document.getElementById("multiplier").value);
+      const totalSum = parseFloat(document.getElementById("totalSum").value);
+      const output = document.getElementById("output");
+      output.innerHTML = "";
 
       if (isNaN(totalSum) || totalSum <= 0) {
         output.innerHTML = "Please enter a valid total balance.";
         return;
       }
 
-      const denominator = Math.pow(multiplier, levelCount) - 1;
-      const base = totalSum * (multiplier - 1) / denominator;
+      // Calculate first level using geometric progression sum formula
+      let firstLevel = totalSum * (multiplier - 1) / (Math.pow(multiplier, levelCount) - 1);
+      let levels = [];
+      let current = firstLevel;
 
-      let sumCheck = 0;
-      for (let i = 0; i < levelCount; i++) {
-        const levelValue = base * Math.pow(multiplier, i);
-        lastLevels.push({ level: i + 1, value: levelValue.toFixed(2) });
-        output.innerHTML += `<p>Level ${i + 1}: ${levelValue.toFixed(2)}</p>`;
-        sumCheck += levelValue;
+      for (let i = 1; i <= levelCount; i++) {
+        levels.push(current);
+        output.innerHTML += `<p>Level ${i}: ${current.toFixed(2)}</p>`;
+        current *= multiplier;
       }
 
-      sumDisplay.innerHTML = `Computed Total: ${sumCheck.toFixed(2)} (Target: ${totalSum.toFixed(2)})`;
+      window.generatedLevels = levels; // for export
     }
 
-    function clearFields() {
-      document.getElementById('sumInput').value = '';
-      document.getElementById('output').innerHTML = '';
-      document.getElementById('sum').innerHTML = '';
-      lastLevels = [];
-    }
+    async function downloadImage() {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const levels = window.generatedLevels || [];
 
-    function toggleTheme() {
-      const body = document.body;
-      const toggleBtn = document.getElementById('themeToggle');
-      body.classList.toggle('dark-mode');
-      const mode = body.classList.contains('dark-mode') ? 'dark' : 'light';
-      localStorage.setItem('theme', mode);
-      toggleBtn.textContent = mode === 'dark' ? '☀️' : '🌙';
-    }
+      canvas.width = 600;
+      canvas.height = 100 + levels.length * 30;
 
-    function downloadLevels() {
-      if (lastLevels.length === 0) {
-        alert("Please generate levels first.");
-        return;
-      }
+      // Background
+      ctx.fillStyle = darkMode ? "#121212" : "#f5f8ff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      let csvContent = "Level,Value\n";
-      lastLevels.forEach(lvl => {
-        csvContent += `${lvl.level},${lvl.value}\n`;
+      // Title
+      ctx.fillStyle = darkMode ? "#fff" : "#000";
+      ctx.font = "24px Arial";
+      ctx.fillText("Levels for Prediction", 180, 40);
+
+      // Levels
+      ctx.font = "18px Arial";
+      levels.forEach((lvl, i) => {
+        ctx.fillText(`Level ${i + 1}: ${lvl.toFixed(2)}`, 200, 80 + i * 30);
       });
 
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "levels.csv";
-      a.click();
-      URL.revokeObjectURL(url);
+      // Watermark
+      const watermark = new Image();
+      watermark.src = URL.createObjectURL(await fetch("/mnt/data/file-PdPVzLSfMY8xh6n3tpPQoq").then(r => r.blob()));
+      watermark.onload = () => {
+        const w = 150;
+        const h = 150;
+        ctx.globalAlpha = 0.15;
+        ctx.drawImage(watermark, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+        ctx.globalAlpha = 1;
+
+        const link = document.createElement("a");
+        link.download = "levels.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      }
     }
 
-    window.onload = function () {
-      const theme = localStorage.getItem('theme');
-      if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('themeToggle').textContent = '☀️';
-      }
-    };
-  </script>
-</body>
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(22);
+      doc.text("Levels for Prediction", 60, 20);
+
+      const levels = window.generatedLevels || [];
+      doc.setFontSize(14);
+      levels.forEach((lvl, i) => {
+        doc.text(`Level ${i + 1}: ${lvl.toFixed(2)}`, 60, 40 + i * 10);
+      });
+
+      const watermark = await fetch("/mnt/data/file-PdPVzLSfMY8xh6n3tpPQoq").then(r => r.blob());
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        doc.addImage(reader.result, "PNG", 50, 90, 100, 100, undefined, "FAST");
+        doc.save("levels.pdf");
+      };
+      reader.readAsDataURL(watermark);
+    }
+  </script></body>
 </html>
