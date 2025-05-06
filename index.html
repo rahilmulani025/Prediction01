@@ -1,197 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Levels for Predictions</title>
-    <style>
-        :root {
-            --bg-color: #f0f8ff;
-            --text-color: #000;
-            --button-bg: #333;
-            --button-text: #fff;
-            --link-color: #1e90ff;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Levels for Predictions</title>
+  <style>
+    :root {
+      --bg-color: #f0f8ff;
+      --text-color: #000;
+      --button-bg: #333;
+      --button-text: #fff;
+      --link-color: #1e90ff;
+    }
 
-        body.dark-mode {
-            --bg-color: #1e1e1e;
-            --text-color: #f0f0f0;
-            --button-bg: #444;
-            --button-text: #fff;
-            --link-color: #87cefa;
-        }
+    body.dark-mode {
+      --bg-color: #1e1e1e;
+      --text-color: #f0f0f0;
+      --button-bg: #444;
+      --button-text: #fff;
+      --link-color: #87cefa;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            transition: background-color 0.4s, color 0.4s;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      transition: background-color 0.4s, color 0.4s;
+    }
 
-        h1 {
-            margin-bottom: 10px;
-        }
+    select, input[type="number"], button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      width: 220px;
+      max-width: 90%;
+    }
 
-        select, input[type="number"], button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px;
-            width: 200px;
-            max-width: 90%;
-        }
+    button {
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        input[type="number"].error {
-            border: 2px solid red;
-        }
+    .output {
+      margin-top: 30px;
+      font-size: 18px;
+    }
 
-        button {
-            cursor: pointer;
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
+    .sum {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 20px;
+    }
 
-        .output {
-            margin-top: 30px;
-            font-size: 18px;
-        }
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      z-index: 1000;
+    }
 
-        .sum {
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 20px;
-        }
+    footer {
+      color: var(--text-color);
+      padding: 10px;
+      text-align: center;
+    }
 
-        .theme-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--button-bg);
-            color: var(--button-text);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
+    footer a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-        footer {
-            color: var(--text-color);
-            padding: 10px;
-            text-align: center;
-        }
-
-        footer a {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 22px;
-            }
-
-            .theme-toggle {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-        }
-    </style>
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">Dark</button>
 
-    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+  <h1>Levels for Predictions</h1>
+  <p>Created by: @Mrunknown</p>
 
-    <h1>Levels for Predictions</h1>
-    <p>Created by: @Mrunknown</p>
+  <select id="multiplierSelection">
+    <option value="3">3x</option>
+    <option value="2">2x</option>
+  </select>
+  <br>
 
-    <label for="multiplierSelection">Choose Multiplier:</label><br>
-    <select id="multiplierSelection" aria-label="Multiplier Selection">
-        <option value="3">3x</option>
-        <option value="2">2x</option>
-    </select>
-    <br>
+  <select id="levelSelection">
+    <option value="8">8 Levels</option>
+    <option value="7">7 Levels</option>
+    <option value="6">6 Levels</option>
+    <option value="5">5 Levels</option>
+    <option value="4">4 Levels</option>
+  </select>
+  <br>
 
-    <label for="levelSelection">Choose Number of Levels:</label><br>
-    <select id="levelSelection" aria-label="Level Count Selection">
-        <option value="8">8 Levels</option>
-        <option value="7">7 Levels</option>
-        <option value="6">6 Levels</option>
-        <option value="5">5 Levels</option>
-        <option value="4">4 Levels</option>
-    </select>
-    <br>
+  <input type="number" step="any" id="sumInput" placeholder="Enter Total Sum">
+  <br>
+  <button onclick="calculateFromSum()">Calculate Levels</button>
+  <button onclick="clearFields()">Clear</button>
+  <button onclick="downloadLevels()">Download Levels</button>
 
-    <label for="level1">Enter Level 1:</label><br>
-    <input type="number" step="any" id="level1" placeholder="Enter Level 1" aria-label="Level 1">
-    <br>
+  <div class="output" id="output"></div>
+  <div class="sum" id="sum"></div>
 
-    <button onclick="generateLevels()">Generate Levels</button>
-    <button onclick="clearFields()">Clear</button>
+  <footer>
+    <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p>
+  </footer>
 
-    <div class="output" id="output"></div>
-    <div class="sum" id="sum"></div>
+  <script>
+    let lastLevels = [];
 
-    <footer>
-        <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p>
-    </footer>
+    function calculateFromSum() {
+      const multiplier = parseFloat(document.getElementById('multiplierSelection').value);
+      const levelCount = parseInt(document.getElementById('levelSelection').value);
+      const totalSum = parseFloat(document.getElementById('sumInput').value);
+      const output = document.getElementById('output');
+      const sumDisplay = document.getElementById('sum');
 
-    <script>
-        function generateLevels() {
-            let levelCount = parseInt(document.getElementById('levelSelection').value);
-            let multiplier = parseFloat(document.getElementById('multiplierSelection').value);
-            let numberInput = document.getElementById('level1');
-            let number = parseFloat(numberInput.value);
-            let output = document.getElementById('output');
-            let sumOutput = document.getElementById('sum');
-            output.innerHTML = '';
-            sumOutput.innerHTML = '';
-            numberInput.classList.remove('error');
+      output.innerHTML = '';
+      sumDisplay.innerHTML = '';
+      lastLevels = [];
 
-            if (isNaN(number)) {
-                output.innerHTML = "Please enter a valid number.";
-                numberInput.classList.add('error');
-                return;
-            }
+      if (isNaN(totalSum) || totalSum <= 0) {
+        output.innerHTML = "Please enter a valid total sum.";
+        return;
+      }
 
-            let sum = number;
-            output.innerHTML += `<p>Level 1: ${number}</p>`;
+      const denominator = Math.pow(multiplier, levelCount) - 1;
+      const base = totalSum * (multiplier - 1) / denominator;
 
-            for (let i = 1; i < levelCount; i++) {
-                number *= multiplier;
-                output.innerHTML += `<p>Level ${i + 1}: ${number.toFixed(2)}</p>`;
-                sum += number;
-            }
+      let sumCheck = 0;
+      for (let i = 0; i < levelCount; i++) {
+        const levelValue = base * Math.pow(multiplier, i);
+        lastLevels.push({ level: i + 1, value: levelValue.toFixed(2) });
+        output.innerHTML += `<p>Level ${i + 1}: ${levelValue.toFixed(2)}</p>`;
+        sumCheck += levelValue;
+      }
 
-            sumOutput.innerHTML = `Sum of all levels: ${sum.toFixed(2)}`;
-        }
+      sumDisplay.innerHTML = `Computed Total: ${sumCheck.toFixed(2)} (Target: ${totalSum.toFixed(2)})`;
+    }
 
-        function clearFields() {
-            document.getElementById('level1').value = '';
-            document.getElementById('output').innerHTML = '';
-            document.getElementById('sum').innerHTML = '';
-            document.getElementById('level1').classList.remove('error');
-        }
+    function clearFields() {
+      document.getElementById('sumInput').value = '';
+      document.getElementById('output').innerHTML = '';
+      document.getElementById('sum').innerHTML = '';
+      lastLevels = [];
+    }
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        }
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
 
-        // Load saved theme on page load
-        window.onload = function() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-        };
-    </script>
+    function downloadLevels() {
+      if (lastLevels.length === 0) {
+        alert("Please generate levels first.");
+        return;
+      }
 
+      let csvContent = "Level,Value\n";
+      lastLevels.forEach(lvl => {
+        csvContent += `${lvl.level},${lvl.value}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "levels.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    };
+  </script>
 </body>
 </html>
