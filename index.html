@@ -5,74 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Levels for Predictions</title>
     <style>
+        :root {
+            --bg-color: #f0f8ff;
+            --text-color: #000;
+            --button-bg: #333;
+            --button-text: #fff;
+            --link-color: #1e90ff;
+        }
+
+        body.dark-mode {
+            --bg-color: #1e1e1e;
+            --text-color: #f0f0f0;
+            --button-bg: #444;
+            --button-text: #fff;
+            --link-color: #87cefa;
+        }
+
         body {
-            background-color: #f0f8ff;
-            font-family: Arial,sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+            transition: background-color 0.4s, color 0.4s;
         }
 
         h1 {
-            color: #333;
+            margin-bottom: 10px;
         }
 
-        input[type="number"] {
+        select, input[type="number"], button {
             padding: 10px;
             font-size: 16px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin: 10px;
             width: 200px;
+            max-width: 90%;
         }
 
-        select {
-            padding: 10px;
-            font-size: 16px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            width: 200px;
+        input[type="number"].error {
+            border: 2px solid red;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 16px;
             cursor: pointer;
-            background-color: #333;
-            color: white;
+            background-color: var(--button-bg);
+            color: var(--button-text);
             border: none;
             border-radius: 5px;
+            transition: background 0.3s;
         }
 
         .output {
             margin-top: 30px;
             font-size: 18px;
         }
-        
+
         .sum {
             margin-top: 20px;
             font-weight: bold;
             font-size: 20px;
         }
-        
+
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--button-bg);
+            color: var(--button-text);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
         footer {
-               color:black; 
-               padding:10px;
-               text-align:center; 
-                }
-        
-         footer a{color:#1e90ff;
-                 text-decoration:none;
-                 font-weight:bold; }
-                 
-         footer a:hover
-         { text-decoration:underline; }
+            color: var(--text-color);
+            padding: 10px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 22px;
+            }
+
+            .theme-toggle {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+
     <h1>Levels for Predictions</h1>
     <p>Created by: @Mrunknown</p>
 
-    <select id="levelSelection">
+    <label for="multiplierSelection">Choose Multiplier:</label><br>
+    <select id="multiplierSelection" aria-label="Multiplier Selection">
+        <option value="3">3x</option>
+        <option value="2">2x</option>
+    </select>
+    <br>
+
+    <label for="levelSelection">Choose Number of Levels:</label><br>
+    <select id="levelSelection" aria-label="Level Count Selection">
         <option value="8">8 Levels</option>
         <option value="7">7 Levels</option>
         <option value="6">6 Levels</option>
@@ -80,41 +128,70 @@
         <option value="4">4 Levels</option>
     </select>
     <br>
-    <input type="number" step="any" id="level1" placeholder="Enter Level 1">
+
+    <label for="level1">Enter Level 1:</label><br>
+    <input type="number" step="any" id="level1" placeholder="Enter Level 1" aria-label="Level 1">
     <br>
+
     <button onclick="generateLevels()">Generate Levels</button>
+    <button onclick="clearFields()">Clear</button>
 
     <div class="output" id="output"></div>
     <div class="sum" id="sum"></div>
 
+    <footer>
+        <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p>
+    </footer>
+
     <script>
         function generateLevels() {
-            let levelCount = parseInt(document.getElementById('levelSelection').value); 
-            let number = parseFloat(document.getElementById('level1').value); // Changed to parseFloat
+            let levelCount = parseInt(document.getElementById('levelSelection').value);
+            let multiplier = parseFloat(document.getElementById('multiplierSelection').value);
+            let numberInput = document.getElementById('level1');
+            let number = parseFloat(numberInput.value);
             let output = document.getElementById('output');
             let sumOutput = document.getElementById('sum');
-            output.innerHTML = ''; 
-            sumOutput.innerHTML = '';  
+            output.innerHTML = '';
+            sumOutput.innerHTML = '';
+            numberInput.classList.remove('error');
 
             if (isNaN(number)) {
                 output.innerHTML = "Please enter a valid number.";
+                numberInput.classList.add('error');
                 return;
             }
 
             let sum = number;
-
             output.innerHTML += `<p>Level 1: ${number}</p>`;
-            
+
             for (let i = 1; i < levelCount; i++) {
-                number *= 3;
-                output.innerHTML += `<p>Level ${i + 1}: ${number.toFixed(2)}</p>`; // Limiting float to 2 decimal places
+                number *= multiplier;
+                output.innerHTML += `<p>Level ${i + 1}: ${number.toFixed(2)}</p>`;
                 sum += number;
             }
-            sumOutput.innerHTML = `Sum of all levels: ${sum.toFixed(2)}`; // Limiting sum to 2 decimal places
+
+            sumOutput.innerHTML = `Sum of all levels: ${sum.toFixed(2)}`;
         }
+
+        function clearFields() {
+            document.getElementById('level1').value = '';
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('sum').innerHTML = '';
+            document.getElementById('level1').classList.remove('error');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load saved theme on page load
+        window.onload = function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        };
     </script>
-    
-    <footer> <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p> </footer>
 
 </body>
 </html>
