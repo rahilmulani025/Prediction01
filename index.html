@@ -1,236 +1,199 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Levels for Predictions</title>
-    <style>
-        body {
-            background-color: #f0f8ff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }.dark-mode {
-        background-color: #121212;
-        color: #f0f0f0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Levels for Predictions</title>
+  <style>
+    :root {
+      --bg-color: #f9f9ff;
+      --text-color: #000;
+      --button-bg: #333;
+      --button-text: #fff;
+      --link-color: #1e90ff;
     }
 
-    h1 {
-        color: #333;
-        margin-top: 10px;
+    body.dark-mode {
+      --bg-color: #1e1e1e;
+      --text-color: #f0f0f0;
+      --button-bg: #444;
+      --button-text: #fff;
+      --link-color: #87cefa;
     }
 
-    .controls {
-        margin-bottom: 20px;
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      transition: background-color 0.4s, color 0.4s;
     }
 
-    input[type="number"], select {
-        padding: 10px;
-        font-size: 16px;
-        margin: 10px;
-        width: 200px;
+    select, input[type="number"], button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      width: 220px;
+      max-width: 90%;
     }
 
     button {
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        background-color: #333;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        margin: 5px;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
     .output {
-        margin-top: 30px;
-        font-size: 18px;
+      margin-top: 30px;
+      font-size: 18px;
     }
 
     .sum {
-        margin-top: 20px;
-        font-weight: bold;
-        font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .theme-toggle {
+      margin: 0 auto 10px auto;
+      display: inline-block;
+      background: transparent;
+      font-size: 22px;
+      border: none;
+      cursor: pointer;
     }
 
     footer {
-        color: black;
-        padding: 10px;
-        text-align: center;
+      color: var(--text-color);
+      padding: 10px;
+      text-align: center;
     }
 
     footer a {
-        color: #1e90ff;
-        text-decoration: none;
-        font-weight: bold;
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: bold;
     }
 
     footer a:hover {
-        text-decoration: underline;
+      text-decoration: underline;
     }
-
-    #toggleDarkMode {
-        font-size: 20px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        position: relative;
-        top: 10px;
-    }
-
-    #top-controls {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-</style>
-
+  </style>
 </head>
 <body>
-    <div id="top-controls">
-        <button id="toggleDarkMode">🌙</button>
-    </div><h1>Levels for Predictions</h1>
-<p>Created by: @Mrunknown</p>
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
 
-<div class="controls">
-    <select id="levelSelection">
-        <option value="8">8 Levels</option>
-        <option value="7">7 Levels</option>
-        <option value="6">6 Levels</option>
-        <option value="5">5 Levels</option>
-        <option value="4">4 Levels</option>
-        <option value="3">3 Levels</option>
-    </select>
+  <h1>Levels for Predictions</h1>
+  <p>Created by: @Mrunknown</p>
 
-    <select id="multiplierSelection">
-        <option value="3">3x</option>
-        <option value="2">2x</option>
-    </select>
+  <select id="multiplierSelection">
+    <option value="3">3x</option>
+    <option value="2">2x</option>
+  </select>
+  <br>
 
-    <input type="number" step="any" id="totalSum" placeholder="Enter your total balance" />
-    <br />
-    <button onclick="generateLevels()">Download Levels</button>
-    <button onclick="downloadAsImage()">Download PNG</button>
-    <button onclick="downloadAsPDF()">Download PDF</button>
-</div>
+  <select id="levelSelection">
+    <option value="8">8 Levels</option>
+    <option value="7">7 Levels</option>
+    <option value="6">6 Levels</option>
+    <option value="5">5 Levels</option>
+    <option value="4">4 Levels</option>
+    <option value="3">3 Levels</option>
+  </select>
+  <br>
 
-<div class="output" id="output"></div>
-<div class="sum" id="sum"></div>
+  <input type="number" step="any" id="sumInput" placeholder="Enter your total balance">
+  <br>
+  <button onclick="calculateFromSum()">Calculate Levels</button>
+  <button onclick="clearFields()">Clear</button>
+  <button onclick="downloadLevels()">Download Levels</button>
 
-<footer>
-    <p>
-        Connect with us on
-        <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a>
-    </p>
-</footer>
+  <div class="output" id="output"></div>
+  <div class="sum" id="sum"></div>
 
-<canvas id="canvas" style="display:none;"></canvas>
+  <footer>
+    <p>Connect with us on <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a></p>
+  </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-    let darkMode = false;
+  <script>
+    let lastLevels = [];
 
-    document.getElementById('toggleDarkMode').addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        darkMode = !darkMode;
-        document.getElementById('toggleDarkMode').textContent = darkMode ? '☀️' : '🌙';
-    });
+    function calculateFromSum() {
+      const multiplier = parseFloat(document.getElementById('multiplierSelection').value);
+      const levelCount = parseInt(document.getElementById('levelSelection').value);
+      const totalSum = parseFloat(document.getElementById('sumInput').value);
+      const output = document.getElementById('output');
+      const sumDisplay = document.getElementById('sum');
 
-    function generateLevels() {
-        const levelCount = parseInt(document.getElementById('levelSelection').value);
-        const multiplier = parseFloat(document.getElementById('multiplierSelection').value);
-        const total = parseFloat(document.getElementById('totalSum').value);
-        const output = document.getElementById('output');
-        const sumOutput = document.getElementById('sum');
+      output.innerHTML = '';
+      sumDisplay.innerHTML = '';
+      lastLevels = [];
 
-        output.innerHTML = '';
-        sumOutput.innerHTML = '';
+      if (isNaN(totalSum) || totalSum <= 0) {
+        output.innerHTML = "Please enter a valid total balance.";
+        return;
+      }
 
-        if (isNaN(total)) {
-            output.innerHTML = 'Please enter a valid balance.';
-            return;
-        }
+      const denominator = Math.pow(multiplier, levelCount) - 1;
+      const base = totalSum * (multiplier - 1) / denominator;
 
-        let levels = [];
-        const ratio = (1 - Math.pow(multiplier, levelCount)) / (1 - multiplier);
-        const first = total / ratio;
-        let value = first;
-        let sum = value;
-        levels.push(value);
-        output.innerHTML += `<p>Level 1: ${value.toFixed(2)}</p>`;
+      let sumCheck = 0;
+      for (let i = 0; i < levelCount; i++) {
+        const levelValue = base * Math.pow(multiplier, i);
+        lastLevels.push({ level: i + 1, value: levelValue.toFixed(2) });
+        output.innerHTML += `<p>Level ${i + 1}: ${levelValue.toFixed(2)}</p>`;
+        sumCheck += levelValue;
+      }
 
-        for (let i = 1; i < levelCount; i++) {
-            value *= multiplier;
-            levels.push(value);
-            output.innerHTML += `<p>Level ${i + 1}: ${value.toFixed(2)}</p>`;
-            sum += value;
-        }
-
-        sumOutput.innerHTML = `Sum of all levels: ${sum.toFixed(2)}`;
-
-        window.generatedLevels = levels;
+      sumDisplay.innerHTML = `Computed Total: ${sumCheck.toFixed(2)} (Target: ${totalSum.toFixed(2)})`;
     }
 
-    function loadImageBase64(callback) {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAADj6nXYAAAACXBIWXMAAAsTAAALEwEAmpwYAA...'; // base64 of watermark image (to be added)
-        img.onload = () => callback(img);
+    function clearFields() {
+      document.getElementById('sumInput').value = '';
+      document.getElementById('output').innerHTML = '';
+      document.getElementById('sum').innerHTML = '';
+      lastLevels = [];
     }
 
-    function downloadAsImage() {
-        if (!window.generatedLevels) return alert('Generate levels first!');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 800;
-        canvas.height = 600;
-
-        ctx.fillStyle = darkMode ? '#121212' : '#f0f8ff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = darkMode ? '#fff' : '#000';
-        ctx.font = '28px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Levels for Prediction', canvas.width / 2, 50);
-
-        ctx.font = '20px Arial';
-        window.generatedLevels.forEach((level, index) => {
-            ctx.fillText(`Level ${index + 1}: ${level.toFixed(2)}`, canvas.width / 2, 100 + index * 30);
-        });
-
-        loadImageBase64((img) => {
-            ctx.globalAlpha = 0.1;
-            ctx.drawImage(img, canvas.width / 2 - 100, canvas.height / 2 - 100, 200, 200);
-            ctx.globalAlpha = 1.0;
-
-            const link = document.createElement('a');
-            link.download = 'levels.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        });
+    function toggleTheme() {
+      const body = document.body;
+      const toggleBtn = document.getElementById('themeToggle');
+      body.classList.toggle('dark-mode');
+      const mode = body.classList.contains('dark-mode') ? 'dark' : 'light';
+      localStorage.setItem('theme', mode);
+      toggleBtn.textContent = mode === 'dark' ? '☀️' : '🌙';
     }
 
-    async function downloadAsPDF() {
-        if (!window.generatedLevels) return alert('Generate levels first!');
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+    function downloadLevels() {
+      if (lastLevels.length === 0) {
+        alert("Please generate levels first.");
+        return;
+      }
 
-        doc.setFontSize(18);
-        doc.text('Levels for Prediction', 105, 20, null, null, 'center');
+      let csvContent = "Level,Value\n";
+      lastLevels.forEach(lvl => {
+        csvContent += `${lvl.level},${lvl.value}\n`;
+      });
 
-        doc.setFontSize(12);
-        window.generatedLevels.forEach((level, index) => {
-            doc.text(`Level ${index + 1}: ${level.toFixed(2)}`, 20, 40 + index * 10);
-        });
-
-        const img = new Image();
-        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAADj6nXYAAAACXBIWXMAAAsTAAALEwEAmpwYAA...'; // base64 watermark
-        img.onload = function () {
-            doc.addImage(img, 'PNG', 55, 100, 100, 100, '', 'FAST');
-            doc.save('levels.pdf');
-        };
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "levels.csv";
+      a.click();
+      URL.revokeObjectURL(url);
     }
-</script>
 
+    window.onload = function () {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeToggle').textContent = '☀️';
+      }
+    };
+  </script>
 </body>
 </html>
