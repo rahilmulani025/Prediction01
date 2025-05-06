@@ -1,167 +1,236 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Levels for Predictions</title>
-  <style>
-    body {
-      background-color: #f5f8ff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Levels for Predictions</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }.dark-mode {
+        background-color: #121212;
+        color: #f0f0f0;
     }
-    body.dark {
-      background-color: #121212;
-      color: #ffffff;
-    }
-    .dark-mode-toggle {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 20px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
+
     h1 {
-      margin-top: 40px;
+        color: #333;
+        margin-top: 10px;
     }
-    input,
-    select {
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px;
-      width: 220px;
+
+    .controls {
+        margin-bottom: 20px;
     }
+
+    input[type="number"], select {
+        padding: 10px;
+        font-size: 16px;
+        margin: 10px;
+        width: 200px;
+    }
+
     button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 10px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background-color: #333;
-      color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin: 5px;
     }
+
     .output {
-      margin-top: 20px;
-      font-size: 18px;
+        margin-top: 30px;
+        font-size: 18px;
     }
-  </style>
+
+    .sum {
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    footer {
+        color: black;
+        padding: 10px;
+        text-align: center;
+    }
+
+    footer a {
+        color: #1e90ff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    #toggleDarkMode {
+        font-size: 20px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        top: 10px;
+    }
+
+    #top-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+
 </head>
 <body>
-  <button class="dark-mode-toggle" onclick="toggleDarkMode()">&#9728;</button>  <h1>Levels for Predictions</h1>  <select id="levelSelection">
-    <option value="3">3 Levels</option>
-    <option value="4">4 Levels</option>
-    <option value="5">5 Levels</option>
-    <option value="6">6 Levels</option>
-    <option value="7">7 Levels</option>
-    <option value="8">8 Levels</option>
-  </select>  <select id="multiplier">
-    <option value="2">2x</option>
-    <option value="3">3x</option>
-  </select>  <input type="number" step="any" id="totalSum" placeholder="Enter your total balance" />
-  <br />
-  <button onclick="generateLevels()">Generate Levels</button>
-  <button onclick="downloadImage()">Download PNG</button>
-  <button onclick="downloadPDF()">Download PDF</button>  <div class="output" id="output"></div><canvas id="canvas" style="display:none"></canvas>
+    <div id="top-controls">
+        <button id="toggleDarkMode">🌙</button>
+    </div><h1>Levels for Predictions</h1>
+<p>Created by: @Mrunknown</p>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  <script>
+<div class="controls">
+    <select id="levelSelection">
+        <option value="8">8 Levels</option>
+        <option value="7">7 Levels</option>
+        <option value="6">6 Levels</option>
+        <option value="5">5 Levels</option>
+        <option value="4">4 Levels</option>
+        <option value="3">3 Levels</option>
+    </select>
+
+    <select id="multiplierSelection">
+        <option value="3">3x</option>
+        <option value="2">2x</option>
+    </select>
+
+    <input type="number" step="any" id="totalSum" placeholder="Enter your total balance" />
+    <br />
+    <button onclick="generateLevels()">Download Levels</button>
+    <button onclick="downloadAsImage()">Download PNG</button>
+    <button onclick="downloadAsPDF()">Download PDF</button>
+</div>
+
+<div class="output" id="output"></div>
+<div class="sum" id="sum"></div>
+
+<footer>
+    <p>
+        Connect with us on
+        <a href="https://t.me/Unknown_rizz" target="_blank">Telegram</a>
+    </p>
+</footer>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
     let darkMode = false;
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark");
-      darkMode = !darkMode;
-      document.querySelector(".dark-mode-toggle").innerHTML = darkMode ? "&#9790;" : "&#9728;";
-    }
+    document.getElementById('toggleDarkMode').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        darkMode = !darkMode;
+        document.getElementById('toggleDarkMode').textContent = darkMode ? '☀️' : '🌙';
+    });
 
     function generateLevels() {
-      const levelCount = parseInt(document.getElementById("levelSelection").value);
-      const multiplier = parseFloat(document.getElementById("multiplier").value);
-      const totalSum = parseFloat(document.getElementById("totalSum").value);
-      const output = document.getElementById("output");
-      output.innerHTML = "";
+        const levelCount = parseInt(document.getElementById('levelSelection').value);
+        const multiplier = parseFloat(document.getElementById('multiplierSelection').value);
+        const total = parseFloat(document.getElementById('totalSum').value);
+        const output = document.getElementById('output');
+        const sumOutput = document.getElementById('sum');
 
-      if (isNaN(totalSum) || totalSum <= 0) {
-        output.innerHTML = "Please enter a valid total balance.";
-        return;
-      }
+        output.innerHTML = '';
+        sumOutput.innerHTML = '';
 
-      // Calculate first level using geometric progression sum formula
-      let firstLevel = totalSum * (multiplier - 1) / (Math.pow(multiplier, levelCount) - 1);
-      let levels = [];
-      let current = firstLevel;
+        if (isNaN(total)) {
+            output.innerHTML = 'Please enter a valid balance.';
+            return;
+        }
 
-      for (let i = 1; i <= levelCount; i++) {
-        levels.push(current);
-        output.innerHTML += `<p>Level ${i}: ${current.toFixed(2)}</p>`;
-        current *= multiplier;
-      }
+        let levels = [];
+        const ratio = (1 - Math.pow(multiplier, levelCount)) / (1 - multiplier);
+        const first = total / ratio;
+        let value = first;
+        let sum = value;
+        levels.push(value);
+        output.innerHTML += `<p>Level 1: ${value.toFixed(2)}</p>`;
 
-      window.generatedLevels = levels; // for export
+        for (let i = 1; i < levelCount; i++) {
+            value *= multiplier;
+            levels.push(value);
+            output.innerHTML += `<p>Level ${i + 1}: ${value.toFixed(2)}</p>`;
+            sum += value;
+        }
+
+        sumOutput.innerHTML = `Sum of all levels: ${sum.toFixed(2)}`;
+
+        window.generatedLevels = levels;
     }
 
-    async function downloadImage() {
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-      const levels = window.generatedLevels || [];
-
-      canvas.width = 600;
-      canvas.height = 100 + levels.length * 30;
-
-      // Background
-      ctx.fillStyle = darkMode ? "#121212" : "#f5f8ff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Title
-      ctx.fillStyle = darkMode ? "#fff" : "#000";
-      ctx.font = "24px Arial";
-      ctx.fillText("Levels for Prediction", 180, 40);
-
-      // Levels
-      ctx.font = "18px Arial";
-      levels.forEach((lvl, i) => {
-        ctx.fillText(`Level ${i + 1}: ${lvl.toFixed(2)}`, 200, 80 + i * 30);
-      });
-
-      // Watermark
-      const watermark = new Image();
-      watermark.src = URL.createObjectURL(await fetch("/mnt/data/file-PdPVzLSfMY8xh6n3tpPQoq").then(r => r.blob()));
-      watermark.onload = () => {
-        const w = 150;
-        const h = 150;
-        ctx.globalAlpha = 0.15;
-        ctx.drawImage(watermark, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-        ctx.globalAlpha = 1;
-
-        const link = document.createElement("a");
-        link.download = "levels.png";
-        link.href = canvas.toDataURL();
-        link.click();
-      }
+    function loadImageBase64(callback) {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAADj6nXYAAAACXBIWXMAAAsTAAALEwEAmpwYAA...'; // base64 of watermark image (to be added)
+        img.onload = () => callback(img);
     }
 
-    async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+    function downloadAsImage() {
+        if (!window.generatedLevels) return alert('Generate levels first!');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 600;
 
-      doc.setFontSize(22);
-      doc.text("Levels for Prediction", 60, 20);
+        ctx.fillStyle = darkMode ? '#121212' : '#f0f8ff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      const levels = window.generatedLevels || [];
-      doc.setFontSize(14);
-      levels.forEach((lvl, i) => {
-        doc.text(`Level ${i + 1}: ${lvl.toFixed(2)}`, 60, 40 + i * 10);
-      });
+        ctx.fillStyle = darkMode ? '#fff' : '#000';
+        ctx.font = '28px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Levels for Prediction', canvas.width / 2, 50);
 
-      const watermark = await fetch("/mnt/data/file-PdPVzLSfMY8xh6n3tpPQoq").then(r => r.blob());
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        doc.addImage(reader.result, "PNG", 50, 90, 100, 100, undefined, "FAST");
-        doc.save("levels.pdf");
-      };
-      reader.readAsDataURL(watermark);
+        ctx.font = '20px Arial';
+        window.generatedLevels.forEach((level, index) => {
+            ctx.fillText(`Level ${index + 1}: ${level.toFixed(2)}`, canvas.width / 2, 100 + index * 30);
+        });
+
+        loadImageBase64((img) => {
+            ctx.globalAlpha = 0.1;
+            ctx.drawImage(img, canvas.width / 2 - 100, canvas.height / 2 - 100, 200, 200);
+            ctx.globalAlpha = 1.0;
+
+            const link = document.createElement('a');
+            link.download = 'levels.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
     }
-  </script></body>
+
+    async function downloadAsPDF() {
+        if (!window.generatedLevels) return alert('Generate levels first!');
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text('Levels for Prediction', 105, 20, null, null, 'center');
+
+        doc.setFontSize(12);
+        window.generatedLevels.forEach((level, index) => {
+            doc.text(`Level ${index + 1}: ${level.toFixed(2)}`, 20, 40 + index * 10);
+        });
+
+        const img = new Image();
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHgCAYAAADj6nXYAAAACXBIWXMAAAsTAAALEwEAmpwYAA...'; // base64 watermark
+        img.onload = function () {
+            doc.addImage(img, 'PNG', 55, 100, 100, 100, '', 'FAST');
+            doc.save('levels.pdf');
+        };
+    }
+</script>
+
+</body>
 </html>
